@@ -67,9 +67,11 @@ int main(int argc, char* args[])
     else if (pid == 0)
     {
         // child process
-        // 执行解释器文件(文件要有可执行属性 chmod 777 sunalin.sh)
+        // 执行解释器文件(最好在命令行下创件该文件,文件要有可执行属性 chmod 777 sunalin.sh)
         // 
-        if (execl("./sunalin.sh", "sunalin.sh", "./", (char*)0) < 0)
+        // execl传入的命令行参数 会被追加在 解释器文件中的可选参数后面
+        // 注:execl的pathname会代替第一个命令行参数(下例中即"abc"被替换成"./sunalin.sh")
+        if (execl("./sunalin.sh", "abc", "./", (char*)0) < 0)
             printf("execl error\r\n");
     }
 
