@@ -11,6 +11,9 @@ extern char** environ;
 
 int main(int argc, char* args[])
 {
+    printf("...................................................................\r\n");
+    for (int i = 0; i < argc; i++)
+        printf("argc[%d]:%s\r\n", i, args[i]);
 
     // all en params
     printf("...................................................................\r\n");
