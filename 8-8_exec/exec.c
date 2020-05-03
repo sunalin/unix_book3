@@ -49,9 +49,30 @@ int main(int argc, char* args[])
     else if (pid == 0)
     {
         // child process
+        // 从环变量查找文件名为ls的程序
         if (execlp("ls", "ls", "-hal", (char*)0) < 0)
             printf("execlp error\r\n");
     }
+
+    /*=====================================*/
+    pid = fork();
+    if (pid < 0)
+        printf("fork error\r\n");
+    else if (pid > 0)
+    {
+        // parent process
+        if (waitpid(pid, 0, 0) < 0)
+            printf("waitpid error\r\n");
+    }
+    else if (pid == 0)
+    {
+        // child process
+        // 执行解释器文件(文件要有可执行属性 chmod 777 sunalin.sh)
+        // 
+        if (execl("./sunalin.sh", "sunalin.sh", "./", (char*)0) < 0)
+            printf("execl error\r\n");
+    }
+
     exit(0);
 }
 
