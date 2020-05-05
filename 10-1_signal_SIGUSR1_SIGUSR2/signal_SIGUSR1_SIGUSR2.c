@@ -63,7 +63,7 @@ int main(int argc, char* args[])
         signal(SIGQUIT, sig_slot);
         
     while (1)
-        pause();    // 进程睡眠
+        pause();    // 使调用进程挂起直至捕捉到一个信号
 
     /*
     ./signal_SIGUSR1_SIGUSR2 &      // 在后台启动进程,shell自动将后台进程中SIGINT与SIGQUIT处理方式设置为忽略
