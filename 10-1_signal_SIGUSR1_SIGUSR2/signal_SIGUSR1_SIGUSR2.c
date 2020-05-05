@@ -66,8 +66,8 @@ int main(int argc, char* args[])
         pause();    // 进程睡眠
 
     /*
-    ./SIGUSR1_SIGUSR2 &     // 在后台启动进程,shell自动将后台进程中SIGINT与SIGQUIT处理方式设置为忽略
-    [1] 4097                // 执行上条命令后 shell打印该进程作业号和进程PID
+    ./signal_SIGUSR1_SIGUSR2 &      // 在后台启动进程,shell自动将后台进程中SIGINT与SIGQUIT处理方式设置为忽略
+    [1] 4097                        // 执行上条命令后 shell打印该进程作业号和进程PID
     kill -USR1 4097
     kill -USR2 4097
     kill 4097
