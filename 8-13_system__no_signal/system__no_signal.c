@@ -10,10 +10,6 @@
 #include <wait.h>
 #include <errno.h>
 
-
-int glob = 6;
-char buf[] = "a write to stdout\r\n";
-
 void pr_exit(int status)
 {
     if (WIFEXITED(status))
