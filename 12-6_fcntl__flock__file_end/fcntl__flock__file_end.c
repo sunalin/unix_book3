@@ -65,44 +65,27 @@ pid_t lock_test(int fd, int type, off_t offset, int whence, off_t len)
 
 int main(int argc, char* args[])
 {
-    char PIDFILE[] = "daemon.pid";
-
     int fd;
-    int flags;
-    char buf[10];
 
-    fd = open(PIDFILE, O_WRONLY|O_CREAT, FILE_MODE);
+    fd = open("temp.lock", O_RDWR|O_CREAT|O_TRUNC, FILE_MODE);
     if (fd < 0)
         printf("open error\r\n");
 
-    // try write lock file
-    if (write_lock(fd, 0, SEEK_SET, 0) < 0)
+    for (int i = 0; i < 10000; i++)
     {
-        if (errno == EACCES || errno == EAGAIN)
-        {
-            printf("daemon is already running...\r\n");
-            exit(0);
-        }
-        else
-            printf("write_lock error\r\n");
+        // 锁定文件尾
+        if (writew_lock(fd, 0, SEEK_END, 0) < 0)
+            printf("writew_lock error\r\n");
+        // 从文件尾写
+        if (write(fd, &fd, 1) != 1)
+            printf("write error\r\n");
+        // 解锁
+        if (un_lock(fd, -1, SEEK_END, 0) < 0)
+            printf("un_lock error\r\n");
+        // 从新的文件尾写
+        if (write(fd, &fd, 1) != 1)
+            printf("write error\r\n");
     }
-
-    ftruncate(fd, 0);   // 长度截为0
-    /* write pid */
-    sprintf(buf, "%d\n", getpid());
-    if (write(fd, buf, strlen(buf)) != strlen(buf))
-        printf("write error\r\n");
-
-    /* 当fork子进程后仍可用fd,但exec后系统就会关闭子进程中的fd */
-    flags = fcntl(fd, F_GETFD);  
-    flags |= FD_CLOEXEC;  
-    fcntl(fd, F_SETFD, flags);
-
-    // do something...
-#if 1
-    while (1)
-        pause();
-#endif
 
     exit(0);
 }
