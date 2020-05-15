@@ -27,7 +27,7 @@ int main(int argc, char* args[])
 
     if (argc != 2)
     {
-        printf("usage: ./pipe <filepath>\r\n");
+        printf("usage: ./pipe_dup2 <filepath>\r\n");
         exit(0);
     }
 
