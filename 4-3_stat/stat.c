@@ -31,7 +31,7 @@ int main(int argc, char* args[])
         else if (S_ISSOCK(st.st_mode))  printf("S_ISSOCK \r\n");    // Ì×½Ó×Ö
     }
     /*
-        ./stat_fstat_lstat /vmlinuz /etc /dev/tty /dev/sda /var/spool/cron/FIFO /bin /dev/printer
+        ./stat /vmlinuz /etc /dev/tty /dev/sda /var/spool/cron/FIFO /bin /dev/printer
      */
     
     return 0;

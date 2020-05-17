@@ -1,5 +1,5 @@
 cc = gcc
-taget = stat_fstat_lstat
+taget = stat
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 
