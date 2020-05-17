@@ -10,7 +10,7 @@
 int main(int argc, char *args[])
 {
     int n;
-    char buf[1024];
+    char buf[4096];
 
     int fd = -1;
 
@@ -21,7 +21,6 @@ int main(int argc, char *args[])
             printf("read error");
         else if (n > 0)
         {
-            // 标准输出则被重新定向到/dev/null上
             if (write(STDOUT_FILENO, buf, n) != n)
                 printf("write error");
         }
