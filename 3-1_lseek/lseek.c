@@ -10,6 +10,7 @@ int main(int argc, char *args[])
     pos = lseek(STDIN_FILENO, 0, SEEK_CUR);
     printf("lseek return value:%d\r\n", pos);
 
+
     return 0;
 }
 
