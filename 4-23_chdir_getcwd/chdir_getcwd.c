@@ -17,7 +17,7 @@ int main(int argc, char* args[])
 
     ptr = (char*)malloc(ptr_size);
 
-    // 当前工作目录
+    // getcwd    获取进程工作目录
     if (getcwd(ptr, ptr_size) == NULL)
     {
         printf("getcwd error\r\n");
@@ -25,7 +25,7 @@ int main(int argc, char* args[])
     }
     printf("[current work dir] = %s\r\n", ptr);
 
-    // 更改工作目录
+    // chdir    更改进程工作目录
     if (chdir(new_work_dir) < 0)
     {
         printf("chdir error\r\n");
@@ -33,7 +33,7 @@ int main(int argc, char* args[])
     }
     printf("[change work dir]  = %s\r\n", new_work_dir);
 
-    // 当前工作目录
+    // getcwd    获取进程工作目录
     if (getcwd(ptr, ptr_size) == NULL)
     {
         printf("getcwd error\r\n");
