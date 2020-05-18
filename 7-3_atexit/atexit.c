@@ -23,6 +23,7 @@ static void exit_func3()
 
 int main(int argc, char* args[])
 {
+    /* atexit    注册一个或多个终止处理程序，exit自动调用 */
     atexit(exit_func1);
     atexit(exit_func2);
     atexit(exit_func3);
@@ -31,7 +32,6 @@ int main(int argc, char* args[])
 
     printf("main is done\r\n");
 
-    exit(0);
     return 0;
 }
 
