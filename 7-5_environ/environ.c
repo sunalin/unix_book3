@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-extern char** environ;
+extern char** environ;  // extern char** environ;    »·¾³±í
 
 int main(int argc, char* args[])
 {
