@@ -9,21 +9,19 @@
 #include <sys/resource.h>
 
 
-int glob = 6;
+int glob = 5;
 char buf[] = "a write to stdout\r\n";
 
 int main(int argc, char* args[])
 {
-    int var;
+    int var = 10;
     pid_t pid;
-
-    var = 88;
 
     write(STDOUT_FILENO, buf, sizeof(buf) - 1);
 
     printf("fork befor[getpid = %d]\r\n", getpid());
-    fflush(fdopen(STDOUT_FILENO, "a+"));    // flush now
-    pid = fork();   // create copy process
+    fflush(stdout); /* fork之前刷新I/O缓冲区,fork也会复制缓冲区 */
+    pid = fork(); /* fork    创建子进程,fork返回两次(父子各一次),子进程获得父进程(数据空间/堆/栈)的副本且相互独立不共享,共享只读代码段 */
     printf("fork after[getpid = %d]\r\n", getpid());
 
     if (pid < 0)
@@ -36,7 +34,7 @@ int main(int argc, char* args[])
     else if (pid == 0)
     {
         // child process
-        glob++;
+        glob++; // 子进程修改变量,不会影响到父进程
         var++;
     }
 
