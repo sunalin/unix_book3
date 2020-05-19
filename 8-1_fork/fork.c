@@ -21,7 +21,12 @@ int main(int argc, char* args[])
 
     printf("fork befor[getpid = %d]\r\n", getpid());
     fflush(stdout); /* fork之前刷新I/O缓冲区,fork也会复制缓冲区 */
-    pid = fork(); /* fork    创建子进程,fork返回两次(父子各一次),子进程获得父进程(数据空间/堆/栈)的副本且相互独立不共享,共享只读代码段 */
+    /* fork    创建子进程,fork返回两次(父子各一次),
+       子进程获得父进程(数据空间/堆/栈)的副本且相互
+       独立不共享,共享只读代码段,已打开的文件标识也
+       被复制,但相同的标识会共享同一个文件表项(包括
+       了当前文件偏移量,会共享这个偏移量) */
+    pid = fork();
     printf("fork after[getpid = %d]\r\n", getpid());
 
     if (pid < 0)

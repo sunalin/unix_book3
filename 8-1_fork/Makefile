@@ -14,4 +14,3 @@ $(taget): $(obj)
 clean:
 	rm -rf $(obj) $(taget)
 
-
