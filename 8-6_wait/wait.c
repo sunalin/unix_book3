@@ -32,9 +32,7 @@ int main(int argc, char* args[])
 
     /*========================*/
     pid = fork();
-    if (pid < 0)
-        printf("fork error\r\n");
-    else if (pid == 0)  // child process
+    if (pid == 0)  // child process
         exit(7);
     if (wait(&status) != pid)
         printf("wait error\r\n");
@@ -42,20 +40,16 @@ int main(int argc, char* args[])
 
     /*========================*/
     pid = fork();
-    if (pid < 0)
-        printf("fork error\r\n");
-    else if (pid == 0)  // child process
-        abort();        // generates SIGABRT,SIGABRT=6
+    if (pid == 0)  // child process
+        abort();        // generates SIGABRT=6
     if (wait(&status) != pid)
         printf("wait error\r\n");
     pr_exit(status);
 
     /*========================*/
     pid = fork();
-    if (pid < 0)
-        printf("fork error\r\n");
-    else if (pid == 0)  // child process
-        status /= 0;    // divide by 0 generates SIGFPE,SIGFPE=8
+    if (pid == 0)  // child process
+        status /= 0;    // divide by 0 generates SIGFPE=8
     if (wait(&status) != pid)
         printf("wait error\r\n");
     pr_exit(status);
