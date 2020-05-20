@@ -10,9 +10,6 @@
 #include <wait.h>
 
 
-int glob = 6;
-char buf[] = "a write to stdout\r\n";
-
 void pr_exit(int status)
 {
     if (WIFEXITED(status))
@@ -29,28 +26,24 @@ int main(int argc, char* args[])
 {
     pid_t pid;
     int status;
-
+    /* wait    等待子进程终止状态,
+       2次fork以避免僵死进程(一个已终止、但其父进程未对其进行善后处理 wait() ) */
 
     pid = fork();
-    if (pid < 0)
-        printf("fork error\r\n");
-    else if (pid > 0)
+    if (pid > 0)
     {
         // parent process
-        if (waitpid(pid, &status, 0) != pid)    // wait first child process
-            printf("wait error\r\n");
+        waitpid(pid, &status, 0);   // wait first child process
         pr_exit(status);
     }
     else if (pid == 0)
     {
         // first child process
         pid = fork();
-        if (pid < 0)
-            printf("fork error\r\n");
-        else if (pid > 0)
+        if (pid > 0)
         {
             // first child process
-            exit(5);    // stop
+            exit(5);    // first child process exit
         }
         else if (pid == 0)
         {
