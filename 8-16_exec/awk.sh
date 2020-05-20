@@ -6,3 +6,4 @@ BEGIN {
 		printf "argc[%d] = %s\r\n", i, ARGV[i]
 	exit
 }
+ls -a
