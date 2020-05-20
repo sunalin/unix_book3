@@ -27,7 +27,7 @@ int main(int argc, char* args[])
     pid_t pid;
     int status;
     /* wait    等待子进程终止状态,
-       2次fork以避免僵死进程(一个已终止、但其父进程未对其进行善后处理 wait() ) */
+       2次fork以避免僵死进程(一个已终止、但其父进程未对其进行善后处理的进程 wait() ) */
 
     pid = fork();
     if (pid > 0)
