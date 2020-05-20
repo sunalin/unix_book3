@@ -1,5 +1,5 @@
 cc = gcc
-taget = system__no_signal
+taget = system
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 
