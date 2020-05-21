@@ -1,5 +1,5 @@
 cc = gcc
-taget = signal_SIGUSR1_SIGUSR2
+taget = signal
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 

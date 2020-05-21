@@ -15,32 +15,26 @@
 
 static void sig_slot(int signo)
 {
-    if (signo == SIGUSR1)
+    if (signo == SIGUSR1)       /* kill -USR1 4097 */
     {
-        // kill -USR1 4097    // 向4097进程发送信号 SIGUSR1
         printf("sig_slot received signal[%s]\r\n", STR(SIGUSR1));
     }
-    else if (signo == SIGUSR2)
+    else if (signo == SIGUSR2)  /* kill -USR2 4097 */
     {
-        // kill -USR2 4097    // 向4097进程发送信号 SIGUSR2
         printf("sig_slot received signal[%s]\r\n", STR(SIGUSR2));
     }
-    else if (signo == SIGTERM)
+    else if (signo == SIGTERM)  /* kill 4097 */
     {
-        // kill 4097          // 向4097进程发送信号 SIGTERM
-        // 如果进程未处理该信号，则默认处理就是 终止程序动行
         printf("sig_slot received signal[%s]\r\n", STR(SIGTERM));
         exit(0);
     }
-    else if (signo == SIGINT)
+    else if (signo == SIGINT)   /* Ctrl+C */
     {
-        // 用户按中断键(一般采用DELETE或Ctrl+C)
         printf("sig_slot received signal[%s]\r\n", STR(SIGINT));
         exit(0);
     }    
-    else if (signo == SIGQUIT)
+    else if (signo == SIGQUIT)  /* Ctrl+\ */
     {
-        // 用户在终端上按退出键(一般采用Ctrl+\)
         printf("sig_slot received signal[%s]\r\n", STR(SIGQUIT));
         exit(0);
     }
@@ -52,7 +46,7 @@ static void sig_slot(int signo)
 
 int main(int argc, char* args[])
 {
-    // 应用程序无法被捕捉或忽略 SIGKILL SIGSTOP 这两个信号
+    // signal    应用程序无法被捕捉或忽略 SIGKILL SIGSTOP 这两个信号
 
     signal(SIGUSR1, sig_slot);
     signal(SIGUSR2, sig_slot);
@@ -63,14 +57,14 @@ int main(int argc, char* args[])
         signal(SIGQUIT, sig_slot);
         
     while (1)
-        pause();    // 使调用进程挂起直至捕捉到一个信号
+        pause();        // 使调用进程挂起直至捕捉到一个信号
 
     /*
-    ./signal_SIGUSR1_SIGUSR2 &      // 在后台启动进程,shell自动将后台进程中SIGINT与SIGQUIT处理方式设置为忽略
-    [1] 4097                        // 执行上条命令后 shell打印该进程作业号和进程PID
-    kill -USR1 4097
-    kill -USR2 4097
-    kill 4097
+       ./signal &       // shell将后台进程中SIGINT与SIGQUIT处理方式设置为忽略
+       [1] 4097
+       kill -USR1 4097
+       kill -USR2 4097
+       kill 4097
      */
     
     exit(0);
