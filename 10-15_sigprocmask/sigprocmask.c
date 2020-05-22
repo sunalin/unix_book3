@@ -31,18 +31,16 @@ static void sig_slot(int signo)
 
 int main(int argc, char* args[])
 {
-    /* sigprocmask
-     * 设置信号屏蔽集
-     * how:
-     *      SIG_BLOCK:   set包含了我们希望阻塞的附加信号
-     *      SIG_UNBLOCK: set包含了我们希望解除阻塞的信号
-     *      SIG_SETMASK: set为该进程新的信号屏蔽集
-     * set:
-     * oldset:           返回老的屏蔽集
-     * 阻塞/屏蔽: 设置之后再产生的指定信号都被阻塞(信号未决状态)，
-     *            不递送至该进程，直到该信号不再被阻塞，
-     *            除非解除阻塞/屏蔽 或 设置指定信号为 SIG_IGN(忽略)
-     */
+    /* sigprocmask    设置信号屏蔽集
+       how:
+            SIG_BLOCK:   set包含了我们希望阻塞的附加信号
+            SIG_UNBLOCK: set包含了我们希望解除阻塞的信号
+            SIG_SETMASK: set为该进程新的信号屏蔽集
+       set:
+       oldset:           返回老的屏蔽集
+       阻塞/屏蔽: 设置之后再产生的指定信号都被阻塞(信号未决状态)，
+                  不递送至该进程，直到该信号不再被阻塞，
+                  除非解除阻塞/屏蔽 或 设置指定信号为 SIG_IGN(忽略) */
     //int sigprocmask(int how, sigset_t *set, sigset_t *oldset)
 
 
@@ -53,26 +51,18 @@ int main(int argc, char* args[])
     signal(SIGQUIT, sig_slot);
         
     sigemptyset(&new_mask);         // 清空信号集
-    //sigfillset(&new_mask);          // 信号集全为设置
     sigaddset(&new_mask, SIGQUIT);  // 设置 SIGQUIT
-    //sigdelset(&new_mask, SIGQUIT);  // 清除 SIGQUIT
-
-
-    // 信号屏蔽集 增加SIGQUIT
-    sigprocmask(SIG_BLOCK, &new_mask, &old_mask);
+    sigprocmask(SIG_BLOCK, &new_mask, &old_mask);   // 信号屏蔽集 增加SIGQUIT
     printf("%s is locked\r\n", STR(SIGQUIT));
     sleep(5);
 
-    // 查询信号未决状态集(信号已产生但被阻塞，还未递送到进程)
-    sigpending(&pend_status);     
-    printf("\r\n%s pending status: %s\r\n", STR(SIGQUIT),
-           sigismember(&pend_status, SIGQUIT) ? "1":"0");   // 检查指定信号位是否已设置
+    
+    sigpending(&pend_status);   // 查询信号未决状态集(信号已产生但被阻塞，还未递送到进程)
+    printf("pending status: [%s = %s]\r\n", STR(SIGQUIT), sigismember(&pend_status, SIGQUIT) ? "1":"0");
 
-#if 1   // 信号屏蔽集 还原老的屏蔽集，SIGQUIT解除屏蔽，未决的SIGQUIT不再受阻塞而被递送到本进程
+    // 信号屏蔽集 还原老的屏蔽集，SIGQUIT解除屏蔽，未决的SIGQUIT不再受阻塞而被递送到本进程
     sigprocmask(SIG_SETMASK, &old_mask, 0);
-#else
-    sigprocmask(SIG_UNBLOCK, &new_mask, 0);
-#endif
+    //sigprocmask(SIG_UNBLOCK, &new_mask, 0);
     printf("%s is unlocked\r\n", STR(SIGQUIT));
     sleep(5);
     
