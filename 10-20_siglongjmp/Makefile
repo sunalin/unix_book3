@@ -1,5 +1,5 @@
 cc = gcc
-taget = sigsetjmp_siglongjmp
+taget = siglongjmp
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 

@@ -66,15 +66,9 @@ static void sig_SIGALRM(int signo)
 
 int main(int argc, char* args[])
 {
-    /* 
-       本程序显示了在信号处理程序被调用时，系统所设置的信号屏蔽字如何
-       自动地包括刚被捕捉到的信号。它也例示了如何使用sigsetjmp和siglongjmp函数
-    */
-
-    /* 
+    /* siglongjmp时会恢复之前sigsetjmp调用时保存的信号屏敝字
        当调用一个信号处理程序时，被捕捉到的信号加到进程的当前信号屏蔽字。
-       当从信号处理程序返回时，原来的屏蔽字被恢复
-    */
+       当从信号处理程序返回时，原来的屏蔽字被恢复 */
 
     // signal(..) 里面会调用 sigaction(...)
     signal(SIGUSR1, sig_SIGUSR1);
@@ -92,7 +86,7 @@ int main(int argc, char* args[])
         pause();
 
     /*
-       ./sigsetjmp_siglongjmp &
+       ./siglongjmp &
        [1] 2376
        kill -SIGUSR1 2376
      */
