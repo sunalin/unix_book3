@@ -16,9 +16,23 @@
 
 void slot_sig(int signo, siginfo_t* info, void* ctx)
 {
+    //psignal(signo, 0);
     // 以下两种方式都能获得sigqueue发来的数据
-    //printf("info->si_int = %d\r\n", info->si_int);
-    printf("info->si_value.sival_int = %d\r\n", info->si_value.sival_int);
+#if 0
+    printf("info->si_int = %d"
+           "\t signal number = %d"
+           "\t signal name = %s\r\n",
+           info->si_int,
+           signo,
+           strsignal(signo));
+#else
+    printf("info->si_value.sival_int = %d"
+           "\t signal number = %d"
+           "\t signal name = %s\r\n",
+           info->si_value.sival_int,
+           signo,
+           strsignal(signo));
+#endif
 }
 
 int main(int argc, char* args[])
@@ -32,8 +46,8 @@ int main(int argc, char* args[])
     sigemptyset(&act.sa_mask);
     act.sa_flags = SA_SIGINFO;  // 可使用 sa_sigaction
     act.sa_sigaction = slot_sig;
-#define sig_num         (SIGINT)    // 非实时信号
-#define sig_num_real    (SIGRTMIN)  // 实时信号
+#define sig_num         (SIGQUIT)    // 非实时信号
+#define sig_num_real    (SIGRTMIN+4)  // 实时信号
     sigaction(sig_num, &act, 0);
     sigaction(sig_num_real, &act, 0);
     printf(" SIGRTMIN = %d \r\n SIGRTMAX = %d\r\n", SIGRTMIN, SIGRTMAX);
