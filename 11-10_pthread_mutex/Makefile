@@ -1,5 +1,5 @@
 cc = gcc
-taget = pthread_mutex_lock
+taget = pthread_mutex
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 
