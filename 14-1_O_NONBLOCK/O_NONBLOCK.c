@@ -49,12 +49,14 @@ char buf[100000];
 
 int main(int argc, char* args[])
 {
+    /* O_NONBLOCK 非阻塞IO，可通过open或fcntl设置此属性 */
     int read_size;
     int write_size;
 
     read_size = read(STDIN_FILENO, buf, sizeof(buf));
     fprintf(stderr, "read size = %d\r\n", read_size);
 
+    /* 标准输出设为非阻塞 */
     set_fl(STDOUT_FILENO, O_NONBLOCK);
     char* ptr = buf;
     while (read_size > 0)

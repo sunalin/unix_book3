@@ -1,5 +1,5 @@
 cc = gcc
-taget = open__O_NONBLOCK
+taget = O_NONBLOCK
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 
