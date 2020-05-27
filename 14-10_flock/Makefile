@@ -1,5 +1,5 @@
 cc = gcc
-taget = fcntl__flock__file_end
+taget = flock
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 

@@ -65,26 +65,26 @@ pid_t lock_test(int fd, int type, off_t offset, int whence, off_t len)
 
 int main(int argc, char* args[])
 {
-    int fd;
+    int fd;    
+
+    /* 多个进程同时写一个文件尾部时，可以用文件锁保护 */
 
     fd = open("temp.lock", O_RDWR|O_CREAT|O_TRUNC, FILE_MODE);
     if (fd < 0)
         printf("open error\r\n");
 
-    for (int i = 0; i < 10000; i++)
+    char buf[] = "a";
+    for (int i = 0; i < 20; i++)
     {
         // 锁定文件尾
         if (writew_lock(fd, 0, SEEK_END, 0) < 0)
             printf("writew_lock error\r\n");
         // 从文件尾写
-        if (write(fd, &fd, 1) != 1)
+        if (write(fd, buf, 1) != 1)
             printf("write error\r\n");
         // 解锁
         if (un_lock(fd, -1, SEEK_END, 0) < 0)
             printf("un_lock error\r\n");
-        // 从新的文件尾写
-        if (write(fd, &fd, 1) != 1)
-            printf("write error\r\n");
     }
 
     exit(0);
