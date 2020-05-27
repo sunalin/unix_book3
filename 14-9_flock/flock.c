@@ -65,13 +65,13 @@ pid_t lock_test(int fd, int type, off_t offset, int whence, off_t len)
 
 int main(int argc, char* args[])
 {
-    char PIDFILE[] = "daemon.pid";
-
     int fd;
     int flags;
     char buf[10];
 
-    fd = open(PIDFILE, O_WRONLY|O_CREAT, FILE_MODE);
+    /* 用一把文件锁来保证，一份程序只有一个实例运行 */
+
+    fd = open("daemon.pid", O_WRONLY|O_CREAT, FILE_MODE);
     if (fd < 0)
         printf("open error\r\n");
 
@@ -93,16 +93,14 @@ int main(int argc, char* args[])
     if (write(fd, buf, strlen(buf)) != strlen(buf))
         printf("write error\r\n");
 
-    /* 当fork子进程后仍可用fd,但exec后系统就会关闭子进程中的fd */
+    /* 当fork子进程后仍可用fd，FD_CLOEXEC使exec后系统就会关闭子进程中的fd */
     flags = fcntl(fd, F_GETFD);  
     flags |= FD_CLOEXEC;  
     fcntl(fd, F_SETFD, flags);
 
     // do something...
-#if 1
     while (1)
         pause();
-#endif
 
     exit(0);
 }
