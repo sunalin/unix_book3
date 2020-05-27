@@ -1,5 +1,5 @@
 cc = gcc
-taget = daemon_test
+taget = daemonize
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 
