@@ -20,41 +20,31 @@
 int main(int argc, char* args[])
 {
     pid_t pid;
-    int fd[2];
-    char buf[4096];
+    int fd[2];  // fd[0]--read  fd[1]--write
 
-    int* pipe_read = &fd[0];
-    int* pipe_write = &fd[1];
-
-    /* parent ==>> child */
+    /* pipe    创建管道，用于进程通信 */
     if (pipe(fd) < 0)
-    {
-        printf("pipe error\r\n");
-        exit(0);
-    }
-
+        perror("pipe");
+    
     pid = fork();
-    if (pid < 0)
-    {
-        printf("fork error\r\n");
-        exit(0);
-    }
-    else if (pid > 0)
+    if (pid > 0)
     {
         /* parent process */
-        close(*pipe_read);
-        write(*pipe_write, "hello world\r\n", 13);
+        close(fd[0]);
+        write(fd[1], "hello world\r\n", 13);    /* 父进程写管道 */
     }
     else if (pid == 0)
     {
         /* child process */
-        int n;
-        close(*pipe_write);
-        n = read(*pipe_read, buf, sizeof(buf));
+        int n;        
+        char buf[100];
+        close(fd[1]);
+        n = read(fd[0], buf, sizeof(buf));      /* 子进程读管道 */
         write(STDOUT_FILENO, buf, n);
     }
+    sleep(1);
 
-    exit(0);
+    return 0;
 }
 
 
