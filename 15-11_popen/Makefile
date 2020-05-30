@@ -1,5 +1,5 @@
 cc = gcc
-taget = pipe_popen_pclose
+taget = popen
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 
