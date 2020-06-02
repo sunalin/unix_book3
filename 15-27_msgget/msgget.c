@@ -37,7 +37,7 @@ int main(int argc, char* args[])
         key_t key = ftok("./Makefile", 0);
         /* IPC_CREAT: key队列不存在则创建，已存在则打开返回
            IPC_CREAT|IPC_EXCL: key队列不存在则创建，已存在则出错返回 */
-        int msgid = msgget(key, IPC_CREAT);
+        int msgid = msgget(key, IPC_CREAT|0666);
         printf("pid[%d] parent  key=0x%X  msgid=%d\r\n", getpid(), key, msgid);
 
         MSGBUF_T msg;
@@ -76,7 +76,7 @@ int main(int argc, char* args[])
         key_t key = ftok("./Makefile", 0);
         /* IPC_CREAT: key队列不存在则创建，已存在则打开返回
            IPC_CREAT|IPC_EXCL: key队列不存在则创建，已存在则出错返回 */
-        int msgid = msgget(key, IPC_CREAT);
+        int msgid = msgget(key, IPC_CREAT|0666);
         printf("pid[%d] child   key=0x%X  msgid=%d\r\n", getpid(), key, msgid);
     
         MSGBUF_T msg;
