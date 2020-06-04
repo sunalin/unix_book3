@@ -60,7 +60,7 @@ void sem_unlock(int semid)
 
 int main(int argc, char* args[])
 {
-    /* 信号量保护共享内存，可用于不相关进程通信 */
+    /* 信号量(类似互斥量)保护共享内存，可用于不相关进程通信 */
 
     pid_t pid = fork();
     if (pid > 0)
