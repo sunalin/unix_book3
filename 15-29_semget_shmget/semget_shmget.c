@@ -21,6 +21,13 @@
 #include <sys/shm.h>
 
 
+typedef struct
+{
+    char*   buf;
+    int     semid;
+}MY_DATA;
+
+
 /* 二元信号量，占用资源 */
 void sem_lock(int semid)
 {
@@ -75,23 +82,25 @@ int main(int argc, char* args[])
         printf("pid[%d] parent  key=0x%X  shmid=%d\r\n", getpid(), key, shmid);
 
 
-        char* buf = shmat(shmid, 0, SHM_RND);   /* 共享内存链接到本进程 */
+        MY_DATA shared_data;
+        shared_data.semid = semid;
+        shared_data.buf   = shmat(shmid, 0, SHM_RND);   /* 共享内存链接到本进程 */
         while (1)
         {
             static volatile int i = 5;
             if (--i < 0)
                 break;
 
-            sem_lock(semid);    /* 用信号量保护buf */
-            buf[0] = '\0';
-            strcpy(buf, "buf value is 0");
-            buf[strlen(buf)-1] = (i+'0');
-            printf("pid[%d] A: %s\r\n", getpid(), buf);
-            sem_unlock(semid);
+            sem_lock(shared_data.semid);    /* 用信号量保护buf */
+            shared_data.buf[0] = '\0';
+            strcpy(shared_data.buf, "buf value is 0");
+            shared_data.buf[strlen(shared_data.buf)-1] = (i+'0');
+            printf("pid[%d] A: %s\r\n", getpid(), shared_data.buf);
+            sem_unlock(shared_data.semid);
 
             sleep(2);
         }
-        shmdt(buf);  /* 共享内存从本进程分离 */
+        shmdt(shared_data.buf);  /* 共享内存从本进程分离 */
         
         
         waitpid(pid, 0, 0);
@@ -120,20 +129,22 @@ int main(int argc, char* args[])
         printf("pid[%d] child   key=0x%X  shmid=%d\r\n", getpid(), key, shmid);
 
 
-        char* buf = shmat(shmid, 0, SHM_RND);   /* 共享内存链接到本进程 */
+        MY_DATA shared_data;
+        shared_data.semid = semid;
+        shared_data.buf   = shmat(shmid, 0, SHM_RND);   /* 共享内存链接到本进程 */
         while (1)
         {
             static volatile int i = 5;
             if (--i < 0)
                 break;
 
-            sem_lock(semid);    /* 用信号量保护buf */
-            printf("pid[%d] B: %s\r\n", getpid(), buf);
-            sem_unlock(semid);
+            sem_lock(shared_data.semid);    /* 用信号量保护buf */
+            printf("pid[%d] B: %s\r\n", getpid(), shared_data.buf);
+            sem_unlock(shared_data.semid);
 
             sleep(1);
         }
-        shmdt(buf);  /* 共享内存从本进程分离 */
+        shmdt(shared_data.buf);  /* 共享内存从本进程分离 */
     }
 
     /* https://blog.csdn.net/qq_31073871/article/details/80937148
