@@ -5,6 +5,7 @@
 int mian(int argc, char* args[])
 {
     /* ´óĞ¡¶Ë */
+
     unsigned int abc = 0x04030201;
     char* p = (char*)&abc;
 
