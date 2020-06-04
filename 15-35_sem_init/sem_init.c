@@ -97,7 +97,7 @@ void* thread_1(void* arg)
 
 int main(int argc, char* args[])
 {
-    /* POSIX未命名信号量，用于线程的的同步/互斥 */
+    /* POSIX未命名信号量，可用于线程的同步/互斥 */
 
 
     /* POSIX未命名信号量(也被称为内存信号量)
