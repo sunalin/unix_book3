@@ -73,7 +73,7 @@ typedef struct
 
 int main(int argc, char* args[])
 {
-    /* POSIX命名信号量(类似互斥量)保护共享内存，可用于不相关进程通信 */
+    /* POSIX命名信号量，可用于不相关进程的同步/互斥 */
 
     pid_t pid = fork();
     if (pid > 0)
@@ -178,7 +178,10 @@ int main(int argc, char* args[])
         shmdt(shared_data.buf);  /* 共享内存从本进程分离 */
     }
     
-    /* https://www.freesion.com/article/1895162671/ */
+    /* https://www.freesion.com/article/1895162671/
+
+       信号量同步/互斥
+       https://blog.csdn.net/tennysonsky/article/details/46496201 */
     
     return 0;
 }
