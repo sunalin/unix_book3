@@ -2,8 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 
-
-int main(int argc, char *args[])
+int mian(int argc, char* args[])
 {
     /* ¥Û–°∂À */
     unsigned int abc = 0x04030201;
