@@ -1,5 +1,5 @@
 cc = gcc
-taget = sem_open__shmget
+taget = sem_open
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 
