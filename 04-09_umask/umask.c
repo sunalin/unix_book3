@@ -20,10 +20,9 @@ int main(int argc, char* args[])
 
 #define MASK2       S_IRUSR|S_IWUSR|\
                     S_IRGRP|S_IWGRP
-    /*
-       umask 进程设置 文件创建屏蔽字(读/写/可执行 权限)
-       创建文件和目录都会用到屏蔽字
-     */
+    /* umask 进程设置 文件创建屏蔽字(读/写/可执行 权限)
+       创建文件和目录都会用到屏蔽字 */
+       
     umask(0);   // 不屏蔽
     open("./foo1", O_WRONLY|O_CREAT|O_TRUNC, EXEC_MASK);
     umask(MASK1);
