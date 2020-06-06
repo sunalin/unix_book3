@@ -7,10 +7,12 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-extern char** environ;  // extern char** environ;    环境表
+extern char** environ;
 
 int main(int argc, char* args[])
 {
+    /* environ 环境表 */
+
     printf("...................................................................\r\n");
     for (int i = 0; i < argc; i++)
         printf("argc[%d]:%s\r\n", i, args[i]);
