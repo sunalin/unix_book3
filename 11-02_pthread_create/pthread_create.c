@@ -28,6 +28,8 @@ void* new_thread(void* arg)
 
 int main(int argc, char* args[])
 {
+    /* pthread_create 创建一个线程 */
+
     pthread_t tid;
 
     if (pthread_create(&tid, 0, new_thread, 0) != 0)
