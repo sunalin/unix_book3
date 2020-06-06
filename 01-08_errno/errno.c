@@ -5,7 +5,7 @@
 
 int main(int argc, char *args[])
 {
-    /* errno */
+    /* errno ¥Ú”°¥ÌŒÛ–≈œ¢ strerror() perror() */
 
     fprintf(stderr, "EACCES: %s\r\n", strerror(EACCES));
     fprintf(stderr, "ENOENT: %s\r\n", strerror(ENOENT));
