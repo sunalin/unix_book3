@@ -6,6 +6,8 @@
  
 int main(int argc, char *args[])
 {
+    /* lseek …Ë÷√∆´“∆¡ø */
+
     int pos = -1;
     pos = lseek(STDIN_FILENO, 0, SEEK_CUR);
     printf("lseek return value:%d\r\n", pos);
