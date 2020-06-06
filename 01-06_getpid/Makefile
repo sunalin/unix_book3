@@ -1,5 +1,5 @@
 cc = gcc
-taget = print_process_id
+taget = getpid
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 
