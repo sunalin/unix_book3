@@ -10,6 +10,8 @@
 
 int main(int argc, char* args[])
 {
+    /* access faccessat 文件访问权限测试(读/写/可执行) */
+
     if (argc != 2)
     {
         printf("usage: access <pathname>\r\n");
