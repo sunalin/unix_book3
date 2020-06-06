@@ -9,6 +9,8 @@
  
 int main(int argc, char *args[])
 {
+    /* read write */
+
     int n;
     char buf[4096];
 
