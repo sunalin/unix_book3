@@ -4,6 +4,8 @@
  
 int main(int argc, char *args[])
 {
+    /* input_output */
+
     char buf[1024];
 
     int c;
