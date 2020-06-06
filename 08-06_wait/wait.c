@@ -27,6 +27,8 @@ void pr_exit(int status)
 
 int main(int argc, char* args[])
 {
+    /* wait 等待子进程终止状态 */
+
     pid_t pid;
     int status;
 
