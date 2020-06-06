@@ -21,7 +21,7 @@ int main(int argc, char* args[])
     int fd = open("./foo1", O_WRONLY|O_CREAT|O_TRUNC, EXEC_MASK);
     close(fd);
 
-    // chmod 更改文件权限
+    /* chmod 更改文件权限 */
     chmod("./foo1", MASK1);
     /*
         ./umask
