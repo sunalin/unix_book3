@@ -12,6 +12,8 @@
 
 int main(int argc, char* args[])
 {
+    /* exec 请注意UNIX的换行符是\n,使用git拉取还原脚本文件时需注意 */
+
     char* env_paths[] = {"USER=sunalin", "PATH=/tmp", NULL};
     pid_t pid;
 
