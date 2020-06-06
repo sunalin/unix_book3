@@ -9,6 +9,8 @@
  
 int main(int argc, char *args[])
 {
+    /* create lseek write */
+
     char buf1[] = "abcdefg";
     char buf2[] = "ABCDEFG";
 
