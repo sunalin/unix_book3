@@ -9,6 +9,8 @@
  
 int main(int argc, char *args[])
 {
+    /* dup dup2 ¸´ÖÆÎÄ¼şÃèÊö·û */
+
     char buf1[] = "abcdefg";
     char buf2[] = "ABCDEFG";
 
