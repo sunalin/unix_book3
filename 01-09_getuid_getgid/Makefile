@@ -1,5 +1,5 @@
 cc = gcc
-taget = uid_gid
+taget = getuid_getgid
 deps = $(shell find ./ -name "*.h")
 src = $(shell find ./ -name "*.c")
 obj = $(src:%.c=%.o) 

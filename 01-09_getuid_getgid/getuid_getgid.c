@@ -5,6 +5,8 @@
 
 int main(int argc, char *args[])
 {
+    /* getuid getgid */
+
     printf("uid: %d, gid: %d\r\n", getuid(), getgid());
 
     return 0;
