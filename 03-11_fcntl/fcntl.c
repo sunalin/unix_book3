@@ -40,6 +40,8 @@ void clr_fl(int fd, int flags)
 
 int main(int argc, char *args[])
 {
+    /* fcntl */
+
     int open_mode;
     int val;
 
