@@ -10,6 +10,8 @@
 
 int main(int argc, char* args[])
 {
+    /* chdir 更改进程工作目录 getcwd 获取进程工作目录 */
+
     char* ptr;
     int ptr_size = 100;
 
