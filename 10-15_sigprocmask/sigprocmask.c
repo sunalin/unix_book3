@@ -43,7 +43,6 @@ int main(int argc, char* args[])
                   除非解除阻塞/屏蔽 或 设置指定信号为 SIG_IGN(忽略) */
     //int sigprocmask(int how, sigset_t *set, sigset_t *oldset)
 
-
     sigset_t new_mask;
     sigset_t old_mask;
     sigset_t pend_status;
