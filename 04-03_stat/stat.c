@@ -10,6 +10,8 @@
 
 int main(int argc, char* args[])
 {
+    /* stat fstat lstat 打印文件类型 */
+
     struct stat st;
     char* ptr;
 
