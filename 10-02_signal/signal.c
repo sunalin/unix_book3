@@ -46,7 +46,7 @@ static void sig_slot(int signo)
 
 int main(int argc, char* args[])
 {
-    // signal    应用程序无法被捕捉或忽略 SIGKILL SIGSTOP 这两个信号
+    /* signal    应用程序无法被捕捉或忽略 SIGKILL SIGSTOP 这两个信号 */
 
     signal(SIGUSR1, sig_slot);
     signal(SIGUSR2, sig_slot);
