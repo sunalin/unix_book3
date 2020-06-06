@@ -5,6 +5,8 @@
 
 int main(int argc, char *args[])
 {
+    /* errno */
+
     fprintf(stderr, "EACCES: %s\r\n", strerror(EACCES));
     fprintf(stderr, "ENOENT: %s\r\n", strerror(ENOENT));
 
