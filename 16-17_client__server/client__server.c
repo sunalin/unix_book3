@@ -151,35 +151,37 @@ void server(void)
     {
         int sockfd_client = accept(sockfd, 0, 0);
         if (sockfd_client < 0)
+        {
             perror("server accept");
-        else
-        {        
-            print_local_peer(sockfd_client, "server accept");
-
-            /* SOCK_CLOEXEC */
-            int flags = fcntl(sockfd_client, F_GETFL, 0);
-            flags |= SOCK_CLOEXEC;
-            fcntl(sockfd_client, F_SETFL, flags);
-
-            FILE* fp = popen("/usr/bin/uptime", "r");
-            while (fgets(send_buf, sizeof(send_buf), fp) != 0)
-            {
-                printf("server send: %s\n", send_buf);
-                send(sockfd_client, send_buf, strlen(send_buf), 0);
-                usleep(500);
-            }
-            pclose(fp);
-
-            
-            // quit
-            snprintf(send_buf, sizeof(send_buf), "%s", "quit");
-            send_buf[strlen("quit")] = '\0';
-            printf("server send: %s\n", send_buf);
-            send(sockfd_client, send_buf, strlen(send_buf), 0);            
-            fflush(0);
-            if (strstr(send_buf, "quit"))
-                break;
+            sleep(1);
+            continue;
         }
+        print_local_peer(sockfd_client, "server accept");
+
+        /* SOCK_CLOEXEC */
+        int flags = fcntl(sockfd_client, F_GETFL, 0);
+        flags |= SOCK_CLOEXEC;
+        fcntl(sockfd_client, F_SETFL, flags);
+
+        FILE* fp = popen("/usr/bin/uptime", "r");
+        while (fgets(send_buf, sizeof(send_buf), fp) != 0)
+        {
+            printf("server send: %s\n", send_buf);
+            send(sockfd_client, send_buf, strlen(send_buf), 0);
+            usleep(500);
+        }
+        pclose(fp);
+
+        
+        // quit
+        snprintf(send_buf, sizeof(send_buf), "%s", "quit");
+        send_buf[strlen("quit")] = '\0';
+        printf("server send: %s\n", send_buf);
+        send(sockfd_client, send_buf, strlen(send_buf), 0);            
+        fflush(0);
+        if (strstr(send_buf, "quit"))
+            break;
+
         
         shutdown(sockfd_client, SHUT_RDWR);
         close(sockfd_client);
@@ -192,7 +194,7 @@ void server(void)
 
 int main(int argc, char* args[])
 {
-    /* socket AF_INET(ipv4), SOCK_STREAM(TCP)
+    /* socket通信 AF_INET(ipv4), SOCK_STREAM, IPPROTO_TCP(TCP)
 
        应用层：TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet 等等
        传输层：TCP，UDP
