@@ -57,59 +57,61 @@ void client(void)
     addr_in.sin_port = htons(3501);
     inet_pton(AF_INET, "127.0.0.1", &addr_in.sin_addr);
 
-    /* connect to server 127.0.0.1:3501 */
-#define MAXSLEEP    128
-    for (int sec = 1; sec <= MAXSLEEP; sec++)
+    while (1)
     {
+        /* socket */
         sockfd = socket(AF_INET, SOCK_STREAM|SOCK_CLOEXEC/*|SOCK_NONBLOCK*/, 0);
-        if (sockfd < 0
-            || connect(sockfd, (struct sockaddr*)&addr_in, sizeof(addr_in)) < 0)
-        {        
-            perror("client socket connect");
-            shutdown(sockfd, SHUT_RDWR);
+        print_local_peer(sockfd, "client socket");
+        /* TCP:connect成功后才可设O_NONBLOCK(非阻塞) */
+        //int flags = fcntl(sockfd, F_GETFL, 0) | (SOCK_CLOEXEC|O_NONBLOCK);
+        //fcntl(sockfd, F_SETFL, flags);
+
+        /* 连接到指定服务器 127.0.0.1:3501 */
+        if (connect(sockfd, (struct sockaddr*)&addr_in, sizeof(addr_in)) < 0)
+        {
+            perror("client connect");            
             close(sockfd);
-            sockfd = -1;
         }
         else
         {
-            /* connect sucess */
             print_local_peer(sockfd, "client connect");
-            
-            /* SOCK_NONBLOCK 非阻塞(connect成功之后才能设置) */
-            //int flags = fcntl(sockfd, F_GETFL, 0);
-            //flags |= O_NONBLOCK;
-            //fcntl(sockfd, F_SETFL, flags);
-        
             break;
         }
-        if (sec <= MAXSLEEP/2)
-            sleep(sec);
-    }
-
-
-    /* recv server msg */
-    int n = 0;
-    char recv_buf[128];
-    while (1)
-    {
-        n = recv(sockfd, recv_buf, sizeof(recv_buf), 0);
-        if (n < 0)
-            perror("client recv");
-        if (n > 0 && n < (sizeof(recv_buf) - 1))
-        {
-            recv_buf[n] = '\0';
-            printf("client recv: %s\n", recv_buf);
-
-            fflush(0);
-            if (strstr(recv_buf, "quit"))
-                break;
-        }
-        
         sleep(1);
     }
+
+
+    /* msg */
+    int len = 0;
+    char buf[128];
+    while (1)
+    {
+        /* 发送数据 */
+        snprintf(buf, sizeof(buf), "%s", "ab");
+        send(sockfd, buf, strlen(buf), 0);
+        printf("client send: %s\n", buf);
+
+        
+        /* 阻塞接收 */
+        len = recv(sockfd, buf, sizeof(buf), 0);
+        if (len <= 0)
+        {
+            perror("client recv");
+            sleep(1);
+            continue;
+        }
+        buf[len] = '\0';
+        printf("client recv: %s\n", buf);
+
+
+        if (strstr(buf, "quit"))
+            break;
+        sleep(1);
+    }
+
+    fflush(0);
     shutdown(sockfd, SHUT_RDWR);
     close(sockfd);
-
 }
 
 void server(void)
@@ -122,33 +124,29 @@ void server(void)
     addr_in.sin_port = htons(3501);
     inet_pton(AF_INET, "127.0.0.1", &addr_in.sin_addr);
 
-    /* server listen 127.0.0.1:3501 */
+    /* socket */
     sockfd = socket(AF_INET, SOCK_STREAM|SOCK_CLOEXEC/*|SOCK_NONBLOCK*/, 0);
-    if (sockfd < 0
-        || bind(sockfd, (struct sockaddr*)&addr_in, sizeof(addr_in)) < 0
-        || listen(sockfd, 10) < 0) /* 请求连接队列长度10，accept会处理请求 */
-    {
-        perror("server socket bind listen");
-        shutdown(sockfd, SHUT_RDWR);
-        close(sockfd);
-        sockfd = -1;
-        return;
-    }
-    else
-    {
-        /* listen sucess */
-        print_local_peer(sockfd, "server listen");
+    print_local_peer(sockfd, "server socket");
+    /* TCP:connect成功后才可设O_NONBLOCK(非阻塞) */
+    //int flags = fcntl(sockfd, F_GETFL, 0) | (SOCK_CLOEXEC|O_NONBLOCK);
+    //fcntl(sockfd, F_SETFL, flags);
 
-        /* SOCK_NONBLOCK 非阻塞 */
-        //int flags = fcntl(sockfd, F_GETFL, 0);
-        //flags |= O_NONBLOCK;
-        //fcntl(sockfd, F_SETFL, flags);
+    bind(sockfd, (struct sockaddr*)&addr_in, sizeof(addr_in));
+#if 1   // SOCK_STREAM SOCK_SEQPACKET
+    while (listen(sockfd, 10) < 0)  /* 开始监听 请求连接队列长度10 */
+    {
+        perror("server listen");
+        sleep(1);
     }
+    print_local_peer(sockfd, "server listen");
+#endif
+    
 
-    /* server accept */
-    char send_buf[128];
+    /* msg */
+    char buf[128];
     while (1)
     {
+        /* 处理connect请求 */
         int sockfd_client = accept(sockfd, 0, 0);
         if (sockfd_client < 0)
         {
@@ -157,37 +155,34 @@ void server(void)
             continue;
         }
         print_local_peer(sockfd_client, "server accept");
-
-        /* SOCK_CLOEXEC */
-        int flags = fcntl(sockfd_client, F_GETFL, 0);
-        flags |= SOCK_CLOEXEC;
+        /* TCP:connect成功后才可设O_NONBLOCK(非阻塞) */
+        int flags = fcntl(sockfd_client, F_GETFL, 0) | (SOCK_CLOEXEC/*|O_NONBLOCK*/);
         fcntl(sockfd_client, F_SETFL, flags);
 
+
+        /* 回复信息 */
         FILE* fp = popen("/usr/bin/uptime", "r");
-        while (fgets(send_buf, sizeof(send_buf), fp) != 0)
+        if (fgets(buf, sizeof(buf), fp) != 0)
         {
-            printf("server send: %s\n", send_buf);
-            send(sockfd_client, send_buf, strlen(send_buf), 0);
-            usleep(500);
+            send(sockfd_client, buf, strlen(buf), 0);
+            printf("server send: %s\n", buf);
         }
         pclose(fp);
 
         
         // quit
-        snprintf(send_buf, sizeof(send_buf), "%s", "quit");
-        send_buf[strlen("quit")] = '\0';
-        printf("server send: %s\n", send_buf);
-        send(sockfd_client, send_buf, strlen(send_buf), 0);            
-        fflush(0);
-        if (strstr(send_buf, "quit"))
+        snprintf(buf, sizeof(buf), "%s", "quit");
+        send(sockfd_client, buf, strlen(buf), 0);            
+        printf("server send: %s\n", buf);
+        if (strstr(buf, "quit"))
             break;
-
-        
+        fflush(0);
         shutdown(sockfd_client, SHUT_RDWR);
         close(sockfd_client);
         sleep(1);
     }
     
+    fflush(0);
     shutdown(sockfd, SHUT_RDWR);
     close(sockfd);
 }
