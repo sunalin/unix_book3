@@ -131,6 +131,10 @@ void server(void)
     //int flags = fcntl(sockfd, F_GETFL, 0) | (SOCK_CLOEXEC|O_NONBLOCK);
     //fcntl(sockfd, F_SETFL, flags);
 
+    /* SO_REUSEADDR 允许多个(相同/不同)的地址绑定到同一个端口 */
+    int val = 1;
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
+
     bind(sockfd, (struct sockaddr*)&addr_in, sizeof(addr_in));
 #if 1   // SOCK_STREAM SOCK_SEQPACKET
     while (listen(sockfd, 10) < 0)  /* 开始监听 请求连接队列长度10 */
