@@ -75,7 +75,7 @@ void client(void)
         sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr*)&addr_in, sizeof(addr_in));
         printf("client sendto: %s\n", buf);
 
-
+        
         /* 阻塞接收(我们这里不关心发送者的信息) */
         len = recvfrom(sockfd, buf, sizeof(buf), 0, NULL, NULL);
         if (len <= 0)
@@ -85,17 +85,15 @@ void client(void)
             continue;
         }
         buf[len] = '\0';
-        printf("client recv: %s\n", buf);
+        printf("client recvfrom: %s\n", buf);
 
 
         if (strstr(buf, "quit"))
-        {
-            fflush(0);
             break;
-        }
         sleep(1);
     }
 
+    fflush(0);
     shutdown(sockfd, SHUT_RDWR);
     close(sockfd);
 }
@@ -117,14 +115,16 @@ void server(void)
     //int flags = fcntl(sockfd, F_GETFL, 0) | (SOCK_CLOEXEC|O_NONBLOCK);
     //fcntl(sockfd, F_SETFL, flags);
 
-    bind(sockfd, (struct sockaddr*)&addr_in, sizeof(addr_in));  /* 127.0.0.1:3501 */
-    //if (listen(sockfd, 10) < 0) /* 开始监听 请求连接队列长度10 */
-    //{
-    //    perror("server listen");
-    //    close(sockfd);
-    //    return;
-    //}
-
+    bind(sockfd, (struct sockaddr*)&addr_in, sizeof(addr_in));
+#if 0   // SOCK_STREAM SOCK_SEQPACKET
+    while (listen(sockfd, 10) < 0)  /* 开始监听 请求连接队列长度10 */
+    {
+        perror("server listen");
+        sleep(1);
+    }
+    print_local_peer(sockfd, "server listen");
+#endif
+    
 
     /* msg */
     int len = 0;
@@ -143,31 +143,29 @@ void server(void)
             continue;
         }
         buf[len] = '\0';
-        printf("server recv: %s\n", buf);
+        printf("server recvfrom: %s\n", buf);
 
 
         /* 回复信息给请求者 */
         FILE* fp = popen("/usr/bin/uptime", "r");
         if (fgets(buf, sizeof(buf), fp) != 0)
         {
-            printf("server send: %s\n", buf);
             sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr*)addr, addr_len);
+            printf("server sendto: %s\n", buf);
         }
         pclose(fp);
-        
 
+        
         // quit
         snprintf(buf, sizeof(buf), "%s", "quit");
-        printf("server send: %s\n", buf);
         sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr*)addr, addr_len);
+        printf("server sendto: %s\n", buf);
         if (strstr(buf, "quit"))
-        {
-            fflush(0);
             break;
-        }
         sleep(1);
     }
     
+    fflush(0);
     shutdown(sockfd, SHUT_RDWR);
     close(sockfd);
 }
