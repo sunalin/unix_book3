@@ -193,7 +193,7 @@ void server(void)
 
 int main(int argc, char* args[])
 {
-    /* socket通信 AF_INET(ipv4), SOCK_STREAM, IPPROTO_TCP(TCP)
+    /* socket通信 AF_INET(ipv4), SOCK_STREAM(字节流), IPPROTO_TCP(TCP)
 
        应用层：TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet 等等
        传输层：TCP，UDP
