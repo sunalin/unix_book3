@@ -176,7 +176,7 @@ void server(void)
 
 int main(int argc, char* args[])
 {
-    /* socket通信 AF_INET(ipv4), SOCK_DGRAM, IPPROTO_UDP(UDP)
+    /* socket通信 AF_INET(ipv4), SOCK_DGRAM(数据报), IPPROTO_UDP(UDP)
 
        应用层：TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet 等等
        传输层：TCP，UDP
