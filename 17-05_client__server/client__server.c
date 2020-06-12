@@ -151,7 +151,7 @@ int main(int argc, char* args[])
 {
     /* socket通信 AF_UNIX(unix域套接字_命名), SOCK_STREAM(字节流), IPPROTO_TCP(TCP)
 
-       unix域套接字_命名: 全双工管道，用于相关进程通信/线程通信,
+       unix域套接字_命名: 全双工管道，可用于不相关进程通信,
        会创建一个本地socket文件, 本机其它进程可通过该文件连接到监听方
 
        应用层：TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet 等等
