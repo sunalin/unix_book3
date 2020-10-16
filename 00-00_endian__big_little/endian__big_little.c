@@ -2,9 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 
-int mian(int argc, char* args[])
+int main(int argc, char* args[])
 {
-    /* ¥Û–°∂À */
     unsigned int abc = 0x04030201;
     char* p = (char*)&abc;
 
